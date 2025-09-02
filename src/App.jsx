@@ -1,15 +1,13 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function App() {
-  const letters = "abcdefghijklmnopqrstuvwxyz";
-  const numbers = "0123456789";
-  const symbols = `!@#$%^&*()-_=+[]{}|;:'\\",.<>?/~`;
+  const nomeRef = useRef();
+  const specializzazioneRef = useRef();
+  const esperienzaRef = useRef();
+
   const [form, setForm] = useState({
-    nome: "",
     username: "",
     password: "",
-    specializzazione: "",
-    esperienza: "",
     descrizione: "",
   });
 
@@ -29,12 +27,19 @@ export default function App() {
 
   const validate = () => {
     const newErrors = {};
-    if (!form.nome.trim()) newErrors.nome = "Il nome completo è obbligatorio.";
+    const nome = nomeRef.current.value;
+    const specializzazione = specializzazioneRef.current.value;
+    const esperienza = esperienzaRef.current.value;
+
+    if (!nome.trim()) newErrors.nome = "Il nome completo è obbligatorio.";
 
     if (!form.username.trim())
       newErrors.username = "Lo username è obbligatorio.";
     for (let char of form.username.trim()) {
-      if (numbers.includes(char) || symbols.includes(char)) {
+      if (
+        "0123456789".includes(char) ||
+        `!@#$%^&*()-_=+[]{}|;:'\\",.<>?/~`.includes(char)
+      ) {
         newErrors.username = "Usa solo caratteri alfabetici e senza spazi.";
         break;
       }
@@ -53,11 +58,11 @@ export default function App() {
           "La password deve contenere almeno 8 caratteri, 1 lettera, 1 numero e 1 simbolo.";
       }
     }
-    if (!form.specializzazione)
+    if (!specializzazione)
       newErrors.specializzazione = "Seleziona una specializzazione.";
-    if (!form.esperienza.trim()) {
+    if (!esperienza.trim()) {
       newErrors.esperienza = "Inserisci gli anni di esperienza.";
-    } else if (isNaN(form.esperienza) || Number(form.esperienza) <= 0) {
+    } else if (isNaN(esperienza) || Number(esperienza) <= 0) {
       newErrors.esperienza = "Inserisci un numero positivo.";
     }
     if (!form.descrizione.trim())
@@ -77,7 +82,16 @@ export default function App() {
       return;
     }
 
-    console.log(form);
+    const data = {
+      nome: nomeRef.current.value,
+      username: form.username,
+      password: form.password,
+      specializzazione: specializzazioneRef.current.value,
+      esperienza: esperienzaRef.current.value,
+      descrizione: form.descrizione,
+    };
+
+    console.log(data);
     alert("Registrazione completata!");
   };
 
@@ -94,8 +108,7 @@ export default function App() {
                 className="form-control"
                 id="nome"
                 name="nome"
-                value={form.nome}
-                onChange={handleChange}
+                ref={nomeRef}
               />
               {errors.nome && <div className="text-danger">{errors.nome}</div>}
             </div>
@@ -133,8 +146,8 @@ export default function App() {
                 id="specializzazione"
                 className="form-select"
                 name="specializzazione"
-                value={form.specializzazione}
-                onChange={handleChange}
+                ref={specializzazioneRef}
+                defaultValue=""
               >
                 <option value="">Seleziona...</option>
                 <option value="Full Stack">Full Stack</option>
@@ -152,8 +165,7 @@ export default function App() {
                 className="form-control"
                 id="esperienza"
                 name="esperienza"
-                value={form.esperienza}
-                onChange={handleChange}
+                ref={esperienzaRef}
                 min="1"
               />
               {errors.esperienza && (
