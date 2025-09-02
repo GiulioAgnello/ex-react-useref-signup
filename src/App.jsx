@@ -39,8 +39,20 @@ export default function App() {
         break;
       }
     }
-    if (!form.password.trim())
+    // Password: almeno 8 caratteri, 1 lettera, 1 numero, 1 simbolo
+    if (!form.password.trim()) {
       newErrors.password = "La password è obbligatoria.";
+    } else {
+      const pwd = form.password;
+      const hasLength = pwd.length >= 8;
+      const hasLetter = /[a-zA-Z]/.test(pwd);
+      const hasNumber = /[0-9]/.test(pwd);
+      const hasSymbol = /[!@#$%^&*()\-\_=+\[\]{}|;:'"\\,.<>?/~]/.test(pwd);
+      if (!(hasLength && hasLetter && hasNumber && hasSymbol)) {
+        newErrors.password =
+          "La password deve contenere almeno 8 caratteri, 1 lettera, 1 numero e 1 simbolo.";
+      }
+    }
     if (!form.specializzazione)
       newErrors.specializzazione = "Seleziona una specializzazione.";
     if (!form.esperienza.trim()) {
@@ -50,6 +62,10 @@ export default function App() {
     }
     if (!form.descrizione.trim())
       newErrors.descrizione = "La descrizione è obbligatoria.";
+    else if (form.descrizione.length > 1000 || form.descrizione.length < 100) {
+      newErrors.descrizione =
+        "il testo deve contenere almeno 100 caratte e meno di 1000 senza spazi iniziali e finali";
+    }
     return newErrors;
   };
 
