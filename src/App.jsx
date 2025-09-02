@@ -1,6 +1,9 @@
 import { useState } from "react";
 
 export default function App() {
+  const letters = "abcdefghijklmnopqrstuvwxyz";
+  const numbers = "0123456789";
+  const symbols = `!@#$%^&*()-_=+[]{}|;:'\\",.<>?/~`;
   const [form, setForm] = useState({
     nome: "",
     username: "",
@@ -27,6 +30,13 @@ export default function App() {
   const validate = () => {
     const newErrors = {};
     if (!form.nome.trim()) newErrors.nome = "Il nome completo è obbligatorio.";
+    // Controllo con includes per numeri o simboli
+    for (let char of form.nome.trim()) {
+      if (numbers.includes(char) || symbols.includes(char)) {
+        newErrors.nome = "Usa solo caratteri alfabetici e senza spazi.";
+        break;
+      }
+    }
     if (!form.username.trim())
       newErrors.username = "Lo username è obbligatorio.";
     if (!form.password.trim())
