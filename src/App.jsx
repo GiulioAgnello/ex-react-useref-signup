@@ -30,15 +30,15 @@ export default function App() {
   const validate = () => {
     const newErrors = {};
     if (!form.nome.trim()) newErrors.nome = "Il nome completo è obbligatorio.";
-    // Controllo con includes per numeri o simboli
-    for (let char of form.nome.trim()) {
+
+    if (!form.username.trim())
+      newErrors.username = "Lo username è obbligatorio.";
+    for (let char of form.username.trim()) {
       if (numbers.includes(char) || symbols.includes(char)) {
-        newErrors.nome = "Usa solo caratteri alfabetici e senza spazi.";
+        newErrors.username = "Usa solo caratteri alfabetici e senza spazi.";
         break;
       }
     }
-    if (!form.username.trim())
-      newErrors.username = "Lo username è obbligatorio.";
     if (!form.password.trim())
       newErrors.password = "La password è obbligatoria.";
     if (!form.specializzazione)
