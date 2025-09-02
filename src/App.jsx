@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function App() {
   const nomeRef = useRef();
@@ -93,6 +93,23 @@ export default function App() {
 
     console.log(data);
     alert("Registrazione completata!");
+  };
+
+  useEffect(() => {
+    nomeRef.current.focus();
+  }, []);
+
+  const resetForm = (e) => {
+    e.preventDefault();
+    setForm({
+      username: "",
+      password: "",
+      descrizione: "",
+    });
+    if (nomeRef.current) nomeRef.current.value = "";
+    if (specializzazioneRef.current) specializzazioneRef.current.value = "";
+    if (esperienzaRef.current) esperienzaRef.current.value = "";
+    if (nomeRef.current) nomeRef.current.focus();
   };
 
   return (
@@ -191,6 +208,9 @@ export default function App() {
             <div className="col-12 text-center">
               <button type="submit" className="btn btn-primary">
                 Registrati
+              </button>
+              <button className="btn btn-danger mx-4" onClick={resetForm}>
+                Reset
               </button>
             </div>
           </div>
